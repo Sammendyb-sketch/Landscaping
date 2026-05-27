@@ -1,392 +1,1499 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Verdant & Co. | Seattle's Premier Landscape Studio</title>
-    <style>
-        :root {
-            --bg-dark: #0d110e;
-            --bg-card: #151b17;
-            --primary: #4b6e56;
-            --primary-light: #628b70;
-            --text-light: #f3f5f3;
-            --text-muted: #9aaf9e;
-            --gold: #d4af37;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Verdant & Co. — Landscape Architecture</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --forest: #1a2e1a;
+    --moss: #2d4a2d;
+    --sage: #5c7a4e;
+    --fern: #7a9e6a;
+    --lime: #a8c878;
+    --cream: #f5f0e8;
+    --sand: #e8dcc8;
+    --terra: #c4804a;
+    --gold: #d4a82a;
+    --white: #fafaf7;
+  }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: var(--bg-dark);
-            color: var(--text-light);
-            line-height: 1.6;
-        }
+  html { scroll-behavior: smooth; }
 
-        header {
-            background-color: rgba(13, 17, 14, 0.95);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-            padding: 1.2rem 2rem;
-        }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--white);
+    color: var(--forest);
+    overflow-x: hidden;
+    cursor: none;
+  }
 
-        .header-container {
-            max-width: 1100px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+  /* CUSTOM CURSOR */
+  .cursor {
+    position: fixed;
+    width: 12px; height: 12px;
+    background: var(--sage);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+    transition: width 0.2s, height 0.2s, background 0.2s;
+    mix-blend-mode: multiply;
+  }
+  .cursor-ring {
+    position: fixed;
+    width: 40px; height: 40px;
+    border: 1.5px solid var(--sage);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9998;
+    transform: translate(-50%, -50%);
+    transition: transform 0.08s ease-out, width 0.3s, height 0.3s, opacity 0.3s;
+    opacity: 0.6;
+  }
+  .cursor.active { width: 8px; height: 8px; background: var(--terra); }
+  .cursor-ring.active { width: 60px; height: 60px; opacity: 0.3; }
 
-        .logo {
-            font-size: 1.4rem;
-            font-weight: 700;
-            letter-spacing: 0.1rem;
-            text-transform: uppercase;
-        }
+  /* LOADER */
+  .loader {
+    position: fixed; inset: 0;
+    background: var(--forest);
+    z-index: 10000;
+    display: flex; align-items: center; justify-content: center;
+    flex-direction: column;
+    gap: 24px;
+    animation: loaderOut 0.7s 2s ease-in-out forwards;
+  }
+  .loader-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.5rem;
+    color: var(--cream);
+    letter-spacing: 0.15em;
+    animation: fadeInUp 0.6s 0.3s both;
+  }
+  .loader-bar {
+    width: 200px; height: 1px;
+    background: rgba(255,255,255,0.2);
+    position: relative;
+    overflow: hidden;
+    animation: fadeInUp 0.6s 0.5s both;
+  }
+  .loader-bar::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: var(--lime);
+    transform: translateX(-100%);
+    animation: loadBar 1.5s 0.6s ease-in-out forwards;
+  }
+  @keyframes loadBar { to { transform: translateX(0); } }
+  @keyframes loaderOut { to { opacity: 0; visibility: hidden; } }
+  @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
-        .consult-btn {
-            background-color: var(--primary);
-            color: white;
-            text-decoration: none;
-            padding: 0.6rem 1.2rem;
-            border-radius: 4px;
-            font-size: 0.9rem;
-            font-weight: 600;
-            transition: background 0.2s;
-        }
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+    padding: 24px 60px;
+    display: flex; align-items: center; justify-content: space-between;
+    transition: all 0.4s ease;
+  }
+  nav.scrolled {
+    background: rgba(250,250,247,0.94);
+    backdrop-filter: blur(20px);
+    padding: 16px 60px;
+    box-shadow: 0 1px 0 rgba(0,0,0,0.06);
+  }
+  .nav-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--white);
+    text-decoration: none;
+    letter-spacing: 0.05em;
+    transition: color 0.4s;
+  }
+  nav.scrolled .nav-logo { color: var(--forest); }
+  .nav-logo span { color: var(--lime); }
+  nav.scrolled .nav-logo span { color: var(--sage); }
 
-        .consult-btn:hover {
-            background-color: var(--primary-light);
-        }
+  .nav-links { display: flex; gap: 40px; align-items: center; list-style: none; }
+  .nav-links a {
+    font-size: 0.85rem; letter-spacing: 0.12em; text-transform: uppercase;
+    color: rgba(255,255,255,0.8); text-decoration: none;
+    transition: color 0.3s; font-weight: 400;
+    position: relative;
+  }
+  .nav-links a::after {
+    content: ''; position: absolute; bottom: -4px; left: 0; right: 0;
+    height: 1px; background: var(--lime);
+    transform: scaleX(0); transition: transform 0.3s;
+  }
+  .nav-links a:hover::after { transform: scaleX(1); }
+  nav.scrolled .nav-links a { color: var(--moss); }
+  nav.scrolled .nav-links a::after { background: var(--sage); }
 
-        .ticker {
-            background-color: var(--primary);
-            padding: 0.5rem 0;
-            font-size: 0.75rem;
-            font-weight: 600;
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-            overflow: hidden;
-            white-space: nowrap;
-            text-align: center;
-        }
+  .nav-cta {
+    background: var(--lime); color: var(--forest) !important;
+    padding: 10px 24px; border-radius: 2px;
+    font-weight: 500 !important;
+    transition: background 0.3s, transform 0.2s !important;
+  }
+  .nav-cta:hover { background: var(--fern); transform: translateY(-1px); }
+  .nav-cta::after { display: none !important; }
+  nav.scrolled .nav-cta { background: var(--sage); color: var(--white) !important; }
 
-        section {
-            padding: 4rem 2rem;
-            max-width: 1100px;
-            margin: 0 auto;
-        }
+  /* HERO */
+  .hero {
+    height: 100vh;
+    min-height: 700px;
+    position: relative;
+    overflow: hidden;
+    display: flex; align-items: center;
+  }
+  .hero-bg {
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse at 70% 50%, rgba(90,130,70,0.3) 0%, transparent 60%),
+      radial-gradient(ellipse at 20% 80%, rgba(26,46,26,0.8) 0%, transparent 60%),
+      linear-gradient(135deg, #0e1a0e 0%, #1a2e1a 40%, #2a4020 70%, #1e3018 100%);
+  }
+  .hero-texture {
+    position: absolute; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.02'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    opacity: 0.4;
+  }
+  /* Animated leaf particles */
+  .leaf-particle {
+    position: absolute;
+    width: 6px; height: 10px;
+    border-radius: 50% 0;
+    background: rgba(168,200,120,0.15);
+    animation: floatLeaf linear infinite;
+  }
+  @keyframes floatLeaf {
+    0% { transform: translateY(100vh) rotate(0deg) translateX(0); opacity: 0; }
+    10% { opacity: 1; }
+    90% { opacity: 0.5; }
+    100% { transform: translateY(-100px) rotate(360deg) translateX(60px); opacity: 0; }
+  }
 
-        .hero {
-            padding: 6rem 2rem;
-            text-align: center;
-            max-width: 800px;
-        }
+  .hero-content {
+    position: relative; z-index: 2;
+    padding: 0 60px;
+    max-width: 1400px;
+    width: 100%;
+    margin: 0 auto;
+  }
+  .hero-eyebrow {
+    display: flex; align-items: center; gap: 16px;
+    margin-bottom: 28px;
+    animation: fadeInUp 0.8s 2.2s both;
+  }
+  .hero-eyebrow-line { width: 50px; height: 1px; background: var(--lime); }
+  .hero-eyebrow span {
+    font-size: 0.75rem; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--lime); font-weight: 400;
+  }
+  .hero-headline {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(3.5rem, 7vw, 7rem);
+    font-weight: 900;
+    line-height: 0.92;
+    color: var(--white);
+    margin-bottom: 32px;
+    animation: fadeInUp 0.8s 2.4s both;
+  }
+  .hero-headline em { color: var(--lime); font-style: italic; display: block; }
+  .hero-sub {
+    max-width: 520px;
+    font-size: 1.1rem; line-height: 1.7;
+    color: rgba(255,255,255,0.65);
+    font-weight: 300;
+    margin-bottom: 48px;
+    animation: fadeInUp 0.8s 2.6s both;
+  }
+  .hero-actions {
+    display: flex; gap: 20px; align-items: center;
+    animation: fadeInUp 0.8s 2.8s both;
+  }
+  .btn-primary {
+    display: inline-flex; align-items: center; gap: 12px;
+    background: var(--lime); color: var(--forest);
+    padding: 16px 36px; border-radius: 2px;
+    font-size: 0.9rem; letter-spacing: 0.08em; text-transform: uppercase;
+    font-weight: 500; text-decoration: none;
+    transition: all 0.3s ease;
+    border: 2px solid var(--lime);
+  }
+  .btn-primary:hover { background: transparent; color: var(--lime); transform: translateY(-2px); }
+  .btn-outline {
+    display: inline-flex; align-items: center; gap: 10px;
+    color: rgba(255,255,255,0.8);
+    font-size: 0.9rem; letter-spacing: 0.08em;
+    text-decoration: none; padding: 16px 0;
+    transition: color 0.3s;
+  }
+  .btn-outline:hover { color: var(--lime); }
+  .btn-arrow { font-size: 1.2rem; transition: transform 0.3s; }
+  .btn-outline:hover .btn-arrow { transform: translateX(6px); }
 
-        .hero-tag {
-            font-size: 0.85rem;
-            text-transform: uppercase;
-            letter-spacing: 0.2em;
-            color: var(--primary-light);
-            margin-bottom: 1rem;
-            font-weight: 700;
-        }
+  .hero-scroll {
+    position: absolute; bottom: 40px; left: 60px; z-index: 2;
+    display: flex; align-items: center; gap: 12px;
+    animation: fadeInUp 0.8s 3s both;
+  }
+  .scroll-line {
+    width: 1px; height: 60px;
+    background: linear-gradient(to bottom, rgba(255,255,255,0), var(--lime));
+    animation: scrollPulse 2s infinite;
+  }
+  @keyframes scrollPulse { 0%,100% { opacity: 0.4; } 50% { opacity: 1; } }
+  .scroll-text { font-size: 0.7rem; letter-spacing: 0.2em; color: rgba(255,255,255,0.4); text-transform: uppercase; writing-mode: vertical-rl; }
 
-        h1 {
-            font-size: 3rem;
-            font-weight: 300;
-            line-height: 1.2;
-            margin-bottom: 1.5rem;
-        }
+  .hero-stats {
+    position: absolute; bottom: 40px; right: 60px; z-index: 2;
+    display: flex; gap: 40px;
+    animation: fadeInUp 0.8s 3s both;
+  }
+  .stat-item { text-align: right; }
+  .stat-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.4rem; font-weight: 700;
+    color: var(--white); line-height: 1;
+  }
+  .stat-num span { color: var(--lime); }
+  .stat-label { font-size: 0.72rem; letter-spacing: 0.12em; color: rgba(255,255,255,0.4); text-transform: uppercase; margin-top: 4px; }
 
-        h1 span {
-            font-weight: 700;
-        }
+  /* MARQUEE */
+  .marquee-section {
+    background: var(--forest);
+    padding: 20px 0;
+    overflow: hidden;
+    border-top: 1px solid rgba(255,255,255,0.06);
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+  .marquee-track {
+    display: flex; gap: 60px;
+    animation: marqueeScroll 30s linear infinite;
+    width: max-content;
+  }
+  .marquee-item {
+    display: flex; align-items: center; gap: 20px;
+    white-space: nowrap;
+    font-size: 0.75rem; letter-spacing: 0.2em; text-transform: uppercase;
+    color: rgba(255,255,255,0.35); font-weight: 400;
+  }
+  .marquee-dot { width: 4px; height: 4px; border-radius: 50%; background: var(--lime); flex-shrink: 0; }
+  @keyframes marqueeScroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 
-        .hero p {
-            font-size: 1.2rem;
-            color: var(--text-muted);
-            margin-bottom: 2.5rem;
-        }
+  /* ABOUT / INTRO */
+  .section { padding: 120px 60px; max-width: 1400px; margin: 0 auto; }
+  .intro-section {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 100px; align-items: center;
+    padding: 140px 60px;
+    max-width: 1400px; margin: 0 auto;
+  }
+  .intro-media {
+    position: relative;
+  }
+  .intro-img-main {
+    width: 100%; aspect-ratio: 4/5;
+    background: linear-gradient(145deg, #2d4a2d, #1a3020);
+    border-radius: 4px;
+    position: relative; overflow: hidden;
+  }
+  .intro-img-main::before {
+    content: '';
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(circle at 30% 40%, rgba(120,180,80,0.25) 0%, transparent 60%),
+      radial-gradient(circle at 70% 70%, rgba(60,100,40,0.4) 0%, transparent 50%);
+  }
+  /* SVG plant illustration */
+  .intro-img-main svg { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0.8; }
+  .intro-badge {
+    position: absolute; bottom: -30px; right: -30px;
+    width: 150px; height: 150px;
+    background: var(--terra);
+    border-radius: 50%;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    box-shadow: 0 20px 60px rgba(196,128,74,0.4);
+    z-index: 2;
+  }
+  .intro-badge-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.5rem; font-weight: 700; color: var(--white); line-height: 1;
+  }
+  .intro-badge-text { font-size: 0.65rem; letter-spacing: 0.12em; color: rgba(255,255,255,0.8); text-transform: uppercase; text-align: center; }
+  .intro-img-accent {
+    position: absolute; top: -20px; left: -20px;
+    width: 45%; aspect-ratio: 1;
+    background: var(--lime);
+    border-radius: 2px; z-index: -1;
+    opacity: 0.15;
+  }
 
-        .cta-group {
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-        }
+  .section-tag {
+    display: inline-flex; align-items: center; gap: 10px;
+    margin-bottom: 24px;
+  }
+  .section-tag-line { width: 30px; height: 1px; background: var(--sage); }
+  .section-tag span { font-size: 0.72rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--sage); }
+  .section-h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.2rem, 4vw, 3.5rem);
+    font-weight: 700; line-height: 1.1;
+    color: var(--forest);
+    margin-bottom: 28px;
+  }
+  .section-h2 em { color: var(--sage); font-style: italic; }
+  .section-body { font-size: 1rem; line-height: 1.8; color: #4a5a3a; font-weight: 300; margin-bottom: 20px; max-width: 500px; }
+  .feature-list { list-style: none; margin-top: 32px; display: flex; flex-direction: column; gap: 14px; }
+  .feature-list li {
+    display: flex; align-items: flex-start; gap: 14px;
+    font-size: 0.9rem; color: var(--moss);
+  }
+  .feat-icon {
+    width: 24px; height: 24px; border-radius: 50%;
+    background: var(--cream); display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; font-size: 0.7rem; color: var(--sage);
+    border: 1px solid rgba(92,122,78,0.2);
+  }
 
-        .btn {
-            padding: 0.8rem 2rem;
-            border-radius: 4px;
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 1rem;
-            transition: all 0.2s;
-        }
+  /* SERVICES */
+  .services-section { background: var(--cream); padding: 120px 0; }
+  .services-inner { max-width: 1400px; margin: 0 auto; padding: 0 60px; }
+  .services-header {
+    display: flex; justify-content: space-between; align-items: flex-end;
+    margin-bottom: 60px;
+  }
+  .services-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+  }
+  .service-card {
+    background: var(--white);
+    padding: 48px 40px;
+    position: relative; overflow: hidden;
+    transition: all 0.4s ease;
+    cursor: pointer;
+  }
+  .service-card::before {
+    content: '';
+    position: absolute; bottom: 0; left: 0; right: 0;
+    height: 3px;
+    background: var(--sage);
+    transform: scaleX(0);
+    transition: transform 0.4s ease;
+    transform-origin: left;
+  }
+  .service-card:hover::before { transform: scaleX(1); }
+  .service-card:hover { transform: translateY(-4px); box-shadow: 0 20px 60px rgba(26,46,26,0.1); z-index: 2; }
+  .service-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 4rem; font-weight: 900;
+    color: rgba(92,122,78,0.08); line-height: 1;
+    position: absolute; top: 24px; right: 32px;
+    transition: color 0.4s;
+  }
+  .service-card:hover .service-num { color: rgba(92,122,78,0.15); }
+  .service-icon {
+    width: 56px; height: 56px; margin-bottom: 28px;
+    background: linear-gradient(135deg, var(--moss), var(--sage));
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.5rem;
+  }
+  .service-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.4rem; font-weight: 700;
+    color: var(--forest); margin-bottom: 14px;
+  }
+  .service-desc { font-size: 0.9rem; line-height: 1.7; color: #5a6a4a; font-weight: 300; margin-bottom: 24px; }
+  .service-link {
+    font-size: 0.8rem; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--sage); text-decoration: none;
+    display: flex; align-items: center; gap: 8px;
+    transition: gap 0.3s;
+  }
+  .service-link:hover { gap: 16px; }
 
-        .btn-main {
-            background-color: var(--primary);
-            color: white;
-        }
+  /* PROCESS */
+  .process-section { padding: 140px 60px; max-width: 1400px; margin: 0 auto; }
+  .process-grid { display: grid; grid-template-columns: 1fr 2fr; gap: 100px; align-items: start; }
+  .process-steps { display: flex; flex-direction: column; gap: 0; }
+  .process-step {
+    display: grid; grid-template-columns: 60px 1fr;
+    gap: 24px; align-items: start;
+    padding: 32px 0;
+    border-bottom: 1px solid rgba(92,122,78,0.15);
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+  .process-step:first-child { padding-top: 0; }
+  .process-step:hover .step-title { color: var(--sage); }
+  .step-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.8rem; font-weight: 700; color: rgba(92,122,78,0.25);
+    line-height: 1; transition: color 0.3s;
+  }
+  .process-step:hover .step-num { color: var(--sage); }
+  .step-title { font-family: 'Playfair Display', serif; font-size: 1.2rem; font-weight: 700; color: var(--forest); margin-bottom: 8px; transition: color 0.3s; }
+  .step-desc { font-size: 0.88rem; line-height: 1.7; color: #5a6a4a; font-weight: 300; }
 
-        .btn-main:hover {
-            background-color: var(--primary-light);
-        }
+  .process-visual {
+    position: sticky; top: 120px;
+    aspect-ratio: 4/3;
+    background: linear-gradient(145deg, #1a3020, #2d4a2d);
+    border-radius: 4px;
+    overflow: hidden;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .process-visual-inner {
+    width: 80%; height: 80%;
+    position: relative;
+  }
 
-        .btn-sub {
-            border: 1px solid var(--text-muted);
-            color: var(--text-light);
-        }
+  /* GALLERY */
+  .gallery-section { background: var(--forest); padding: 120px 0; overflow: hidden; }
+  .gallery-inner { max-width: 1400px; margin: 0 auto; padding: 0 60px; }
+  .gallery-header { margin-bottom: 60px; }
+  .gallery-header .section-tag-line { background: var(--lime); }
+  .gallery-header .section-tag span { color: var(--lime); }
+  .gallery-header .section-h2 { color: var(--white); }
+  .gallery-header .section-h2 em { color: var(--lime); }
 
-        .btn-sub:hover {
-            background-color: rgba(255,255,255,0.05);
-        }
+  .gallery-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    grid-template-rows: 260px 260px;
+    gap: 8px;
+  }
+  .gallery-item {
+    border-radius: 2px;
+    overflow: hidden; position: relative;
+    cursor: pointer;
+  }
+  .gallery-item:first-child { grid-row: span 2; }
+  .gallery-bg {
+    width: 100%; height: 100%;
+    transition: transform 0.6s ease;
+  }
+  .gallery-item:hover .gallery-bg { transform: scale(1.04); }
+  .gallery-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(to top, rgba(26,46,26,0.85) 0%, transparent 50%);
+    opacity: 0; transition: opacity 0.4s;
+    display: flex; align-items: flex-end; padding: 28px;
+  }
+  .gallery-item:hover .gallery-overlay { opacity: 1; }
+  .gallery-label {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem; color: var(--white); font-weight: 700;
+  }
+  .gallery-sublabel { font-size: 0.78rem; color: rgba(255,255,255,0.6); letter-spacing: 0.1em; margin-top: 4px; }
 
-        h2 {
-            font-size: 2rem;
-            margin-bottom: 1.5rem;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-            padding-bottom: 0.5rem;
-        }
+  /* Garden scene colors for gallery */
+  .g1 { background: linear-gradient(135deg, #1e3a1e, #3d6b3d, #2a5020); }
+  .g2 { background: linear-gradient(135deg, #4a7a2a, #2d5020, #5a8a3a); }
+  .g3 { background: linear-gradient(135deg, #6b4a1e, #4a3015, #8a6030); }
+  .g4 { background: linear-gradient(135deg, #1a4a3a, #2d6a50, #1e3a2e); }
+  .g5 { background: linear-gradient(135deg, #3a5a1e, #5a8a30, #2a4010); }
 
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 1.5rem;
-            margin-top: 2rem;
-        }
+  /* TESTIMONIALS */
+  .testimonials-section { padding: 140px 60px; max-width: 1400px; margin: 0 auto; }
+  .testimonials-layout { display: grid; grid-template-columns: 1fr 2fr; gap: 100px; align-items: center; }
+  .testimonials-left .section-h2 { margin-bottom: 40px; }
+  .rating-display {
+    display: flex; align-items: center; gap: 12px; margin-bottom: 16px;
+  }
+  .stars { color: var(--gold); font-size: 1.1rem; letter-spacing: 4px; }
+  .rating-num { font-family: 'Playfair Display', serif; font-size: 2rem; font-weight: 700; color: var(--forest); }
+  .rating-label { font-size: 0.78rem; color: #7a8a6a; letter-spacing: 0.1em; }
 
-        .card {
-            background-color: var(--bg-card);
-            padding: 2rem;
-            border-radius: 6px;
-            border: 1px solid rgba(255,255,255,0.02);
-        }
+  .testimonials-cards { display: flex; flex-direction: column; gap: 24px; }
+  .tcard {
+    background: var(--cream);
+    border-radius: 4px;
+    padding: 36px 40px;
+    position: relative;
+    border-left: 3px solid transparent;
+    transition: border-color 0.3s;
+  }
+  .tcard:hover { border-left-color: var(--sage); }
+  .tcard-quote {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.05rem; line-height: 1.7; color: var(--forest);
+    font-style: italic; margin-bottom: 24px;
+  }
+  .tcard-quote::before { content: '\201C'; color: var(--sage); font-size: 3rem; line-height: 0; vertical-align: -0.6em; margin-right: 4px; }
+  .tcard-author { display: flex; align-items: center; gap: 16px; }
+  .tcard-avatar {
+    width: 44px; height: 44px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--moss), var(--sage));
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Playfair Display', serif; font-size: 1.1rem; font-weight: 700; color: var(--white);
+  }
+  .tcard-name { font-weight: 500; font-size: 0.9rem; color: var(--forest); }
+  .tcard-loc { font-size: 0.78rem; color: #7a8a6a; }
 
-        .card-num {
-            font-size: 0.85rem;
-            color: var(--primary-light);
-            font-weight: 700;
-            margin-bottom: 0.5rem;
-        }
+  /* PRICING */
+  .pricing-section { background: var(--forest); padding: 120px 0; }
+  .pricing-inner { max-width: 1400px; margin: 0 auto; padding: 0 60px; }
+  .pricing-header { text-align: center; margin-bottom: 64px; }
+  .pricing-header .section-tag { justify-content: center; }
+  .pricing-header .section-tag-line { background: var(--lime); }
+  .pricing-header .section-tag span { color: var(--lime); }
+  .pricing-header .section-h2 { color: var(--white); }
+  .pricing-header .section-h2 em { color: var(--lime); }
+  .pricing-header p { font-size: 1rem; color: rgba(255,255,255,0.5); max-width: 500px; margin: 0 auto; line-height: 1.7; font-weight: 300; }
 
-        .card h3 {
-            margin-bottom: 0.8rem;
-            font-size: 1.3rem;
-        }
+  .pricing-cards {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+  }
+  .pcard {
+    background: rgba(255,255,255,0.04);
+    padding: 48px 40px;
+    position: relative; overflow: hidden;
+    transition: all 0.4s;
+  }
+  .pcard.featured {
+    background: var(--lime);
+  }
+  .pcard:hover:not(.featured) { background: rgba(255,255,255,0.07); }
+  .pcard-tag {
+    display: inline-block;
+    font-size: 0.68rem; letter-spacing: 0.18em; text-transform: uppercase;
+    background: rgba(255,255,255,0.1);
+    color: rgba(255,255,255,0.6);
+    padding: 6px 14px; border-radius: 20px;
+    margin-bottom: 32px;
+  }
+  .pcard.featured .pcard-tag { background: rgba(26,46,26,0.15); color: var(--forest); }
+  .pcard-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.6rem; font-weight: 700;
+    color: var(--white); margin-bottom: 8px;
+  }
+  .pcard.featured .pcard-name { color: var(--forest); }
+  .pcard-price {
+    font-family: 'Playfair Display', serif;
+    font-size: 3rem; font-weight: 700; color: var(--white);
+    margin-bottom: 4px; line-height: 1;
+  }
+  .pcard.featured .pcard-price { color: var(--forest); }
+  .pcard-price-label { font-size: 0.78rem; color: rgba(255,255,255,0.4); margin-bottom: 36px; }
+  .pcard.featured .pcard-price-label { color: rgba(26,46,26,0.5); }
+  .pcard-features { list-style: none; display: flex; flex-direction: column; gap: 12px; margin-bottom: 40px; }
+  .pcard-features li {
+    display: flex; align-items: center; gap: 12px;
+    font-size: 0.88rem; color: rgba(255,255,255,0.65);
+  }
+  .pcard.featured .pcard-features li { color: var(--forest); }
+  .pcard-check { color: var(--lime); font-size: 0.9rem; }
+  .pcard.featured .pcard-check { color: var(--moss); }
+  .pcard-btn {
+    display: block; text-align: center;
+    padding: 14px 28px; border-radius: 2px;
+    font-size: 0.82rem; letter-spacing: 0.12em; text-transform: uppercase;
+    font-weight: 500; text-decoration: none;
+    border: 1px solid rgba(255,255,255,0.2);
+    color: var(--white);
+    transition: all 0.3s;
+  }
+  .pcard:hover:not(.featured) .pcard-btn { border-color: var(--lime); color: var(--lime); }
+  .pcard.featured .pcard-btn { background: var(--forest); color: var(--lime); border-color: var(--forest); }
+  .pcard.featured .pcard-btn:hover { background: var(--moss); }
 
-        .card p {
-            color: var(--text-muted);
-            font-size: 0.95rem;
-        }
+  /* CONTACT / CTA */
+  .cta-section {
+    padding: 160px 60px;
+    max-width: 1400px; margin: 0 auto;
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 100px; align-items: center;
+  }
+  .cta-text .section-h2 { font-size: clamp(2.5rem, 5vw, 4.5rem); }
+  .cta-text p { font-size: 1rem; color: #5a6a4a; line-height: 1.8; font-weight: 300; margin: 24px 0 40px; max-width: 440px; }
+  .cta-form { display: flex; flex-direction: column; gap: 16px; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .form-group { display: flex; flex-direction: column; gap: 8px; }
+  .form-label { font-size: 0.72rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--sage); font-weight: 400; }
+  .form-input, .form-select, .form-textarea {
+    padding: 14px 20px;
+    border: 1px solid rgba(92,122,78,0.25);
+    border-radius: 2px;
+    background: var(--cream);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem; color: var(--forest);
+    outline: none;
+    transition: border-color 0.3s;
+    -webkit-appearance: none;
+  }
+  .form-input:focus, .form-select:focus, .form-textarea:focus { border-color: var(--sage); }
+  .form-textarea { resize: vertical; min-height: 100px; }
+  .form-select { cursor: pointer; background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L6 6L11 1' stroke='%235c7a4e' stroke-width='1.5'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 16px center; }
+  .form-submit {
+    background: var(--forest); color: var(--lime);
+    padding: 18px 40px; border: none;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem; letter-spacing: 0.14em; text-transform: uppercase;
+    font-weight: 500; cursor: pointer;
+    border-radius: 2px;
+    transition: all 0.3s;
+    display: flex; align-items: center; justify-content: center; gap: 12px;
+  }
+  .form-submit:hover { background: var(--moss); transform: translateY(-2px); }
 
-        .highlights {
-            list-style: none;
-            margin-top: 1.5rem;
-        }
+  /* FOOTER */
+  footer { background: var(--forest); padding: 80px 60px 40px; }
+  .footer-inner { max-width: 1400px; margin: 0 auto; }
+  .footer-grid {
+    display: grid; grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 60px; margin-bottom: 60px;
+  }
+  .footer-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.8rem; font-weight: 700; color: var(--white);
+    margin-bottom: 16px; display: block;
+  }
+  .footer-logo span { color: var(--lime); }
+  .footer-tagline { font-size: 0.88rem; color: rgba(255,255,255,0.35); line-height: 1.7; font-weight: 300; max-width: 280px; margin-bottom: 28px; }
+  .footer-socials { display: flex; gap: 12px; }
+  .social-btn {
+    width: 36px; height: 36px; border-radius: 50%;
+    border: 1px solid rgba(255,255,255,0.15);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.8rem; color: rgba(255,255,255,0.4);
+    text-decoration: none; transition: all 0.3s;
+  }
+  .social-btn:hover { border-color: var(--lime); color: var(--lime); }
 
-        .highlights li {
-            margin-bottom: 0.8rem;
-            position: relative;
-            padding-left: 1.5rem;
-        }
+  .footer-col-title { font-size: 0.72rem; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(255,255,255,0.3); margin-bottom: 20px; }
+  .footer-links { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+  .footer-links a {
+    font-size: 0.88rem; color: rgba(255,255,255,0.5);
+    text-decoration: none; transition: color 0.3s;
+  }
+  .footer-links a:hover { color: var(--lime); }
 
-        .highlights li::before {
-            content: "✦";
-            position: absolute;
-            left: 0;
-            color: var(--primary-light);
-        }
+  .footer-bottom {
+    padding-top: 28px; border-top: 1px solid rgba(255,255,255,0.07);
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .footer-copy { font-size: 0.78rem; color: rgba(255,255,255,0.25); }
+  .footer-badges { display: flex; gap: 20px; }
+  .footer-badge { font-size: 0.72rem; letter-spacing: 0.1em; color: rgba(255,255,255,0.2); text-transform: uppercase; }
 
-        .portfolio-list, .review-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-            gap: 1.5rem;
-        }
+  /* SCROLL ANIMATIONS */
+  .reveal {
+    opacity: 0; transform: translateY(40px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+  }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+  .reveal-delay-1 { transition-delay: 0.1s; }
+  .reveal-delay-2 { transition-delay: 0.2s; }
+  .reveal-delay-3 { transition-delay: 0.3s; }
+  .reveal-delay-4 { transition-delay: 0.4s; }
 
-        .p-item {
-            background: linear-gradient(135deg, #1a231e, #111613);
-            padding: 2rem;
-            border-radius: 6px;
-            text-align: center;
-        }
-
-        .p-item h4 {
-            font-size: 1.1rem;
-            margin-bottom: 0.3rem;
-        }
-
-        .p-item span {
-            font-size: 0.85rem;
-            color: var(--text-muted);
-        }
-
-        .stars {
-            color: var(--gold);
-            margin-bottom: 0.5rem;
-        }
-
-        @media (max-width: 600px) {
-            h1 { font-size: 2.2rem; }
-            .cta-group { flex-direction: column; }
-            section { padding: 3rem 1.5rem; }
-        }
-    </style>
+  /* MOBILE */
+  @media (max-width: 900px) {
+    nav { padding: 20px 24px; }
+    nav.scrolled { padding: 14px 24px; }
+    .nav-links { display: none; }
+    .hero-content { padding: 0 24px; }
+    .hero-stats { display: none; }
+    .hero-scroll { left: 24px; }
+    .intro-section { grid-template-columns: 1fr; padding: 80px 24px; gap: 60px; }
+    .section { padding: 80px 24px; }
+    .services-inner, .pricing-inner, .gallery-inner { padding: 0 24px; }
+    .services-grid, .pricing-cards { grid-template-columns: 1fr; }
+    .services-header { flex-direction: column; align-items: flex-start; gap: 20px; }
+    .process-section { padding: 80px 24px; }
+    .process-grid { grid-template-columns: 1fr; gap: 60px; }
+    .process-visual { display: none; }
+    .gallery-grid { grid-template-columns: 1fr 1fr; grid-template-rows: auto; }
+    .gallery-item:first-child { grid-row: span 1; grid-column: span 2; }
+    .testimonials-section { padding: 80px 24px; }
+    .testimonials-layout { grid-template-columns: 1fr; gap: 60px; }
+    .cta-section { grid-template-columns: 1fr; padding: 80px 24px; gap: 60px; }
+    .footer-grid { grid-template-columns: 1fr 1fr; gap: 40px; }
+    footer { padding: 60px 24px 32px; }
+    .form-row { grid-template-columns: 1fr; }
+  }
+</style>
 </head>
 <body>
 
-    <header>
-        <div class="header-container">
-            <div class="logo">Verdant & Co.</div>
-            <a href="#" class="consult-btn">BOOK A FREE CONSULT</a>
-        </div>
-    </header>
+<!-- LOADER -->
+<div class="loader">
+  <div class="loader-logo">Verdant <span style="color:var(--lime)">&</span> Co.</div>
+  <div class="loader-bar"></div>
+</div>
 
-    <div class="ticker">
-        HARDSCAPE INSTALLATION • WATER FEATURES • OUTDOOR LIVING SPACES • SEASONAL PLANTING • IRRIGATION SYSTEMS • LAWN CARE • GARDEN LIGHTING
+<!-- CUSTOM CURSOR -->
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- NAV -->
+<nav id="navbar">
+  <a href="#" class="nav-logo">Verdant <span>&</span> Co.</a>
+  <ul class="nav-links">
+    <li><a href="#services">Services</a></li>
+    <li><a href="#process">Our Process</a></li>
+    <li><a href="#gallery">Portfolio</a></li>
+    <li><a href="#pricing">Pricing</a></li>
+    <li><a href="#contact" class="nav-cta">Free Consult</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="hero-bg"></div>
+  <div class="hero-texture"></div>
+
+  <!-- Animated leaf particles -->
+  <div id="particles"></div>
+
+  <div class="hero-content">
+    <div class="hero-eyebrow">
+      <div class="hero-eyebrow-line"></div>
+      <span>Seattle's Premier Landscape Studio</span>
+    </div>
+    <h1 class="hero-headline">
+      Where Nature<br>Becomes
+      <em>Art.</em>
+    </h1>
+    <p class="hero-sub">
+      We design, build, and maintain extraordinary outdoor spaces — transforming ordinary yards into living, breathing masterpieces that endure for generations.
+    </p>
+    <div class="hero-actions">
+      <a href="#contact" class="btn-primary">
+        Start Your Project
+        <span>→</span>
+      </a>
+      <a href="#gallery" class="btn-outline">
+        View Our Work <span class="btn-arrow">→</span>
+      </a>
+    </div>
+  </div>
+
+  <div class="hero-scroll">
+    <div class="scroll-line"></div>
+    <span class="scroll-text">Scroll</span>
+  </div>
+
+  <div class="hero-stats">
+    <div class="stat-item">
+      <div class="stat-num">14<span>+</span></div>
+      <div class="stat-label">Years of Excellence</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">840<span>+</span></div>
+      <div class="stat-label">Projects Completed</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">99<span>%</span></div>
+      <div class="stat-label">Client Satisfaction</div>
+    </div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-section">
+  <div class="marquee-track" id="marqueeTrack">
+    <div class="marquee-item"><div class="marquee-dot"></div> Landscape Design</div>
+    <div class="marquee-item"><div class="marquee-dot"></div> Hardscape Installation</div>
+    <div class="marquee-item"><div class="marquee-dot"></div> Water Features</div>
+    <div class="marquee-item"><div class="marquee-dot"></div> Outdoor Living Spaces</div>
+    <div class="marquee-item"><div class="marquee-dot"></div> Seasonal Planting</div>
+    <div class="marquee-item"><div class="marquee-dot"></div> Irrigation Systems</div>
+    <div class="marquee-item"><div class="marquee-dot"></div> Lawn Care</div>
+    <div class="marquee-item"><div class="marquee-dot"></div> Garden Lighting</div>
+    <div class="marquee-item"><div class="marquee-dot"></div> Landscape Design</div>
+    <div class="marquee-item"><div class="marquee-dot"></div> Hardscape Installation</div>
+    <div class="marquee-item"><div class="marquee-dot"></div> Water Features</div>
+    <div class="marquee-item"><div class="marquee-dot"></div> Outdoor Living Spaces</div>
+    <div class="marquee-item"><div class="marquee-dot"></div> Seasonal Planting</div>
+    <div class="marquee-item"><div class="marquee-dot"></div> Irrigation Systems</div>
+    <div class="marquee-item"><div class="marquee-dot"></div> Lawn Care</div>
+    <div class="marquee-item"><div class="marquee-dot"></div> Garden Lighting</div>
+  </div>
+</div>
+
+<!-- ABOUT / INTRO -->
+<div class="intro-section">
+  <div class="intro-media reveal">
+    <div class="intro-img-accent"></div>
+    <div class="intro-img-main">
+      <!-- Decorative SVG illustration -->
+      <svg viewBox="0 0 400 500" xmlns="http://www.w3.org/2000/svg">
+        <!-- Large leaf shapes -->
+        <ellipse cx="200" cy="350" rx="80" ry="120" fill="rgba(120,180,80,0.12)" transform="rotate(-15 200 350)"/>
+        <ellipse cx="250" cy="280" rx="60" ry="100" fill="rgba(100,160,60,0.15)" transform="rotate(20 250 280)"/>
+        <ellipse cx="150" cy="300" rx="50" ry="80" fill="rgba(80,140,50,0.1)" transform="rotate(-30 150 300)"/>
+        <!-- Stems -->
+        <path d="M200 500 Q205 400 190 350 Q185 300 200 250" stroke="rgba(120,180,80,0.25)" stroke-width="3" fill="none"/>
+        <path d="M250 500 Q240 420 255 380 Q265 330 240 290" stroke="rgba(100,160,60,0.2)" stroke-width="2" fill="none"/>
+        <!-- Small decorative circles -->
+        <circle cx="300" cy="150" r="40" fill="rgba(168,200,120,0.08)"/>
+        <circle cx="100" cy="180" r="25" fill="rgba(168,200,120,0.06)"/>
+        <circle cx="320" cy="380" r="18" fill="rgba(212,168,42,0.1)"/>
+        <!-- Grid pattern overlay -->
+        <line x1="0" y1="100" x2="400" y2="100" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>
+        <line x1="0" y1="200" x2="400" y2="200" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>
+        <line x1="0" y1="300" x2="400" y2="300" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>
+        <line x1="0" y1="400" x2="400" y2="400" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>
+        <line x1="100" y1="0" x2="100" y2="500" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>
+        <line x1="200" y1="0" x2="200" y2="500" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>
+        <line x1="300" y1="0" x2="300" y2="500" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>
+        <!-- Text watermark -->
+        <text x="50%" y="55%" text-anchor="middle" font-family="Playfair Display, serif" font-size="80" font-weight="900" fill="rgba(255,255,255,0.04)" dominant-baseline="middle">V&C</text>
+      </svg>
+    </div>
+    <div class="intro-badge">
+      <div class="intro-badge-num">14</div>
+      <div class="intro-badge-text">Years of<br>Excellence</div>
+    </div>
+  </div>
+
+  <div class="intro-text">
+    <div class="section-tag reveal">
+      <div class="section-tag-line"></div>
+      <span>About Verdant & Co.</span>
+    </div>
+    <h2 class="section-h2 reveal reveal-delay-1">
+      We don't just plant gardens.<br>We craft <em>legacies.</em>
+    </h2>
+    <p class="section-body reveal reveal-delay-2">
+      Founded in 2010 by master horticulturist Elena Marsh, Verdant & Co. has grown into the Pacific Northwest's most celebrated landscape design studio. Our team of 28 specialists brings together artistry, ecology, and precision craftsmanship.
+    </p>
+    <p class="section-body reveal reveal-delay-2">
+      Every project begins with a conversation — about your vision, your lifestyle, your land. We listen deeply before we draw a single line.
+    </p>
+    <ul class="feature-list reveal reveal-delay-3">
+      <li>
+        <div class="feat-icon">✦</div>
+        <span>Award-winning design recognized by the ASLA Pacific Northwest Chapter</span>
+      </li>
+      <li>
+        <div class="feat-icon">✦</div>
+        <span>Sustainable, native plant-forward approach to every landscape</span>
+      </li>
+      <li>
+        <div class="feat-icon">✦</div>
+        <span>Full-service from concept through maintenance — one relationship, one team</span>
+      </li>
+      <li>
+        <div class="feat-icon">✦</div>
+        <span>Licensed, bonded, and insured with a 5-year craftsmanship guarantee</span>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<!-- SERVICES -->
+<section class="services-section" id="services">
+  <div class="services-inner">
+    <div class="services-header">
+      <div>
+        <div class="section-tag reveal">
+          <div class="section-tag-line"></div>
+          <span>What We Do</span>
+        </div>
+        <h2 class="section-h2 reveal reveal-delay-1">Our <em>Services</em></h2>
+      </div>
+      <p style="max-width:340px; font-size:0.9rem; color:#5a6a4a; line-height:1.7; font-weight:300;" class="reveal reveal-delay-2">
+        From intimate garden redesigns to sweeping estate transformations — we bring the full spectrum of landscape artistry to your property.
+      </p>
+    </div>
+    <div class="services-grid">
+      <div class="service-card reveal">
+        <div class="service-num">01</div>
+        <div class="service-icon">🌿</div>
+        <h3 class="service-title">Landscape Design</h3>
+        <p class="service-desc">Comprehensive design plans drawn by our licensed landscape architects — from planting schedules to 3D visualizations of your future garden.</p>
+        <a href="#contact" class="service-link">Learn More <span>→</span></a>
+      </div>
+      <div class="service-card reveal reveal-delay-1">
+        <div class="service-num">02</div>
+        <div class="service-icon">🪨</div>
+        <h3 class="service-title">Hardscape & Stonework</h3>
+        <p class="service-desc">Patios, pathways, retaining walls, pergolas, and outdoor kitchens — crafted with natural stone, premium pavers, and hand-selected materials.</p>
+        <a href="#contact" class="service-link">Learn More <span>→</span></a>
+      </div>
+      <div class="service-card reveal reveal-delay-2">
+        <div class="service-num">03</div>
+        <div class="service-icon">💧</div>
+        <h3 class="service-title">Water Features</h3>
+        <p class="service-desc">Custom ponds, waterfalls, reflecting pools, and fountain systems designed to bring the calming presence of water to your property.</p>
+        <a href="#contact" class="service-link">Learn More <span>→</span></a>
+      </div>
+      <div class="service-card reveal reveal-delay-1">
+        <div class="service-num">04</div>
+        <div class="service-icon">💡</div>
+        <h3 class="service-title">Landscape Lighting</h3>
+        <p class="service-desc">Architectural and accent lighting systems that extend the beauty of your landscape into the evening hours, safely and dramatically.</p>
+        <a href="#contact" class="service-link">Learn More <span>→</span></a>
+      </div>
+      <div class="service-card reveal reveal-delay-2">
+        <div class="service-num">05</div>
+        <div class="service-icon">🌱</div>
+        <h3 class="service-title">Ongoing Maintenance</h3>
+        <p class="service-desc">Seasonal care plans, lawn programs, pruning, fertilization, and irrigation management — keeping your landscape pristine year-round.</p>
+        <a href="#contact" class="service-link">Learn More <span>→</span></a>
+      </div>
+      <div class="service-card reveal reveal-delay-3">
+        <div class="service-num">06</div>
+        <div class="service-icon">🔄</div>
+        <h3 class="service-title">Smart Irrigation</h3>
+        <p class="service-desc">Precision irrigation systems with smart controllers, rain sensors, and zone management — saving water while keeping everything perfectly hydrated.</p>
+        <a href="#contact" class="service-link">Learn More <span>→</span></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROCESS -->
+<section class="process-section" id="process">
+  <div class="process-grid">
+    <div>
+      <div class="section-tag reveal">
+        <div class="section-tag-line"></div>
+        <span>How It Works</span>
+      </div>
+      <h2 class="section-h2 reveal reveal-delay-1">Our <em>Process</em></h2>
+      <p class="section-body reveal reveal-delay-2">A seamless journey from first conversation to finished masterpiece — every step designed around your vision and comfort.</p>
+
+      <div class="process-steps">
+        <div class="process-step reveal reveal-delay-1">
+          <div class="step-num">01</div>
+          <div>
+            <div class="step-title">Free Discovery Call</div>
+            <div class="step-desc">We start with a 30-minute conversation to understand your vision, budget, and timeline. No pressure, no commitment — just exploration.</div>
+          </div>
+        </div>
+        <div class="process-step reveal reveal-delay-2">
+          <div class="step-num">02</div>
+          <div>
+            <div class="step-title">On-Site Assessment</div>
+            <div class="step-desc">Our lead designer visits your property to assess soil, drainage, sun exposure, and existing plants — the foundation of any great design.</div>
+          </div>
+        </div>
+        <div class="process-step reveal reveal-delay-3">
+          <div class="step-num">03</div>
+          <div>
+            <div class="step-title">Design Presentation</div>
+            <div class="step-desc">We present a full design package including concept renderings, plant lists, material samples, and itemized pricing — bringing your vision to life on paper.</div>
+          </div>
+        </div>
+        <div class="process-step reveal reveal-delay-4">
+          <div class="step-num">04</div>
+          <div>
+            <div class="step-title">Build & Installation</div>
+            <div class="step-desc">Our expert crews execute the design with precision and care, communicating with you throughout and minimizing disruption to your daily life.</div>
+          </div>
+        </div>
+        <div class="process-step reveal">
+          <div class="step-num">05</div>
+          <div>
+            <div class="step-title">Ongoing Care Plan</div>
+            <div class="step-desc">We don't disappear after installation — choose from our maintenance plans to keep your landscape thriving through every season, year after year.</div>
+          </div>
+        </div>
+      </div>
     </div>
 
-    <section class="hero">
-        <div class="hero-tag">Seattle's Premier Landscape Studio</div>
-        <h1>Where Nature Becomes <span>Art.</span></h1>
-        <p>We design, build, and maintain extraordinary outdoor spaces — transforming ordinary yards into living, breathing masterpieces that endure for generations.</p>
-        <div class="cta-group">
-            <a href="#" class="btn btn-main">START YOUR PROJECT &rarr;</a>
-            <a href="#" class="btn btn-sub">View Our Work</a>
-        </div>
-    </section>
+    <div class="process-visual reveal">
+      <div class="process-visual-inner">
+        <svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
+          <!-- Abstract landscape design illustration -->
+          <defs>
+            <radialGradient id="grd1" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="rgba(168,200,120,0.3)"/>
+              <stop offset="100%" stop-color="transparent"/>
+            </radialGradient>
+          </defs>
+          <!-- Ground -->
+          <ellipse cx="200" cy="230" rx="160" ry="40" fill="rgba(45,74,45,0.5)"/>
+          <!-- Trees -->
+          <circle cx="120" cy="160" r="35" fill="rgba(92,122,78,0.4)"/>
+          <circle cx="120" cy="145" r="28" fill="rgba(122,158,106,0.5)"/>
+          <rect x="116" y="190" width="8" height="40" fill="rgba(60,40,20,0.4)"/>
+          <circle cx="280" cy="155" r="40" fill="rgba(92,122,78,0.35)"/>
+          <circle cx="280" cy="138" r="32" fill="rgba(122,158,106,0.45)"/>
+          <rect x="276" y="190" width="8" height="42" fill="rgba(60,40,20,0.35)"/>
+          <!-- Central feature -->
+          <ellipse cx="200" cy="200" rx="50" ry="20" fill="rgba(30,80,60,0.5)"/>
+          <circle cx="200" cy="180" r="22" fill="rgba(50,120,100,0.4)"/>
+          <circle cx="200" cy="172" r="16" fill="rgba(80,160,130,0.35)"/>
+          <!-- Path -->
+          <path d="M200 240 Q180 215 200 200 Q220 185 200 170" stroke="rgba(232,220,200,0.3)" stroke-width="8" fill="none" stroke-linecap="round"/>
+          <!-- Small shrubs -->
+          <circle cx="155" cy="205" r="12" fill="rgba(122,158,106,0.3)"/>
+          <circle cx="245" cy="207" r="14" fill="rgba(122,158,106,0.3)"/>
+          <circle cx="165" cy="220" r="8" fill="rgba(100,140,80,0.3)"/>
+          <!-- Stars/lights -->
+          <circle cx="140" cy="100" r="2" fill="rgba(212,168,42,0.6)"/>
+          <circle cx="260" cy="90" r="2" fill="rgba(212,168,42,0.5)"/>
+          <circle cx="200" cy="80" r="1.5" fill="rgba(212,168,42,0.4)"/>
+          <!-- Glow overlay -->
+          <ellipse cx="200" cy="180" rx="120" ry="80" fill="url(#grd1)"/>
+          <!-- Label -->
+          <text x="200" y="270" text-anchor="middle" font-family="DM Sans, sans-serif" font-size="9" letter-spacing="2" fill="rgba(255,255,255,0.25)" text-transform="uppercase">CONCEPT VISUALIZATION</text>
+        </svg>
+      </div>
+    </div>
+  </div>
+</section>
 
-    <section id="about">
-        <h2>About Verdant & Co.</h2>
-        <p><strong>14 Years of Excellence.</strong> We don't just plant gardens. We craft legacies. Founded in 2010 by master horticulturist Elena Marsh, Verdant & Co. has grown into the Pacific Northwest's most celebrated landscape design studio. Our team of 28 specialists brings together artistry, ecology, and precision craftsmanship. Every project begins with a conversation — about your vision, your lifestyle, your land. We listen deeply before we draw a single line.</p>
-        
-        <ul class="highlights">
-            <li>Award-winning design recognized by the ASLA Pacific Northwest Chapter</li>
-            <li>Sustainable, native plant-forward approach to every landscape</li>
-            <li>Full-service from concept through maintenance — one relationship, one team</li>
-            <li>Licensed, bonded, and insured with a 5-year craftsmanship guarantee</li>
+<!-- GALLERY -->
+<section class="gallery-section" id="gallery">
+  <div class="gallery-inner">
+    <div class="gallery-header">
+      <div class="section-tag reveal">
+        <div class="section-tag-line"></div>
+        <span>Our Portfolio</span>
+      </div>
+      <h2 class="section-h2 reveal reveal-delay-1">Recent <em>Work</em></h2>
+    </div>
+    <div class="gallery-grid reveal">
+      <div class="gallery-item">
+        <div class="gallery-bg g1" style="height:100%;"></div>
+        <div class="gallery-overlay">
+          <div>
+            <div class="gallery-label">The Morrison Estate</div>
+            <div class="gallery-sublabel">Mercer Island — Full Landscape Redesign</div>
+          </div>
+        </div>
+      </div>
+      <div class="gallery-item">
+        <div class="gallery-bg g2" style="height:100%;"></div>
+        <div class="gallery-overlay">
+          <div>
+            <div class="gallery-label">Eastside Garden</div>
+            <div class="gallery-sublabel">Bellevue — Native Plant Design</div>
+          </div>
+        </div>
+      </div>
+      <div class="gallery-item">
+        <div class="gallery-bg g3" style="height:100%;"></div>
+        <div class="gallery-overlay">
+          <div>
+            <div class="gallery-label">Cascade Terrace</div>
+            <div class="gallery-sublabel">Kirkland — Patio & Stonework</div>
+          </div>
+        </div>
+      </div>
+      <div class="gallery-item">
+        <div class="gallery-bg g4" style="height:100%;"></div>
+        <div class="gallery-overlay">
+          <div>
+            <div class="gallery-label">Waterfall Retreat</div>
+            <div class="gallery-sublabel">Redmond — Water Feature</div>
+          </div>
+        </div>
+      </div>
+      <div class="gallery-item">
+        <div class="gallery-bg g5" style="height:100%;"></div>
+        <div class="gallery-overlay">
+          <div>
+            <div class="gallery-label">Urban Sanctuary</div>
+            <div class="gallery-sublabel">Capitol Hill, Seattle — Rooftop Garden</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="testimonials-section" id="testimonials">
+  <div class="testimonials-layout">
+    <div class="testimonials-left">
+      <div class="section-tag reveal">
+        <div class="section-tag-line"></div>
+        <span>Client Love</span>
+      </div>
+      <h2 class="section-h2 reveal reveal-delay-1">What Our <em>Clients</em> Say</h2>
+      <div class="rating-display reveal reveal-delay-2">
+        <div class="stars">★★★★★</div>
+        <div class="rating-num">4.9</div>
+      </div>
+      <div class="rating-label reveal reveal-delay-2" style="font-size:0.8rem;color:#7a8a6a;letter-spacing:0.08em;">Based on 214 reviews across Google, Houzz & Yelp</div>
+      <br>
+      <a href="#contact" class="btn-primary reveal reveal-delay-3" style="display:inline-flex;margin-top:8px;background:var(--sage);border-color:var(--sage);color:var(--white);">
+        Book a Free Consult <span>→</span>
+      </a>
+    </div>
+    <div class="testimonials-cards">
+      <div class="tcard reveal">
+        <div class="tcard-quote">
+          Verdant & Co. completely transformed our backyard. What was once a muddy, unusable space is now the most beautiful room in our home — and we spend every evening out there. The attention to detail was extraordinary.
+        </div>
+        <div class="tcard-author">
+          <div class="tcard-avatar">SR</div>
+          <div>
+            <div class="tcard-name">Sarah & Robert Kincaid</div>
+            <div class="tcard-loc">Mercer Island, WA</div>
+          </div>
+          <div style="margin-left:auto;color:var(--gold);font-size:0.8rem;">★★★★★</div>
+        </div>
+      </div>
+      <div class="tcard reveal reveal-delay-1">
+        <div class="tcard-quote">
+          I've worked with many landscapers over the years. Verdant is different — they think like artists and work like craftspeople. The water feature they designed for us won a neighborhood beautification award.
+        </div>
+        <div class="tcard-author">
+          <div class="tcard-avatar" style="background:linear-gradient(135deg,var(--terra),#e0a060);">MH</div>
+          <div>
+            <div class="tcard-name">Marcus Holloway</div>
+            <div class="tcard-loc">Bellevue, WA</div>
+          </div>
+          <div style="margin-left:auto;color:var(--gold);font-size:0.8rem;">★★★★★</div>
+        </div>
+      </div>
+      <div class="tcard reveal reveal-delay-2">
+        <div class="tcard-quote">
+          From the first consultation through the final walkthrough, the experience was seamless. Their team was professional, on-time, and genuinely cared about getting every detail perfect. Couldn't be happier.
+        </div>
+        <div class="tcard-author">
+          <div class="tcard-avatar" style="background:linear-gradient(135deg,#4a6a8a,#6a9ab0);">JP</div>
+          <div>
+            <div class="tcard-name">Jennifer Park</div>
+            <div class="tcard-loc">Kirkland, WA</div>
+          </div>
+          <div style="margin-left:auto;color:var(--gold);font-size:0.8rem;">★★★★★</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="pricing-section" id="pricing">
+  <div class="pricing-inner">
+    <div class="pricing-header">
+      <div class="section-tag">
+        <div class="section-tag-line"></div>
+        <span>Investment</span>
+      </div>
+      <h2 class="section-h2 reveal">Transparent <em>Pricing</em></h2>
+      <p class="reveal reveal-delay-1">Clear, honest pricing with no hidden fees. Every project includes a detailed proposal before any work begins.</p>
+    </div>
+    <div class="pricing-cards">
+      <div class="pcard reveal">
+        <div class="pcard-tag">Starter</div>
+        <div class="pcard-name">Essential Care</div>
+        <div class="pcard-price">$299</div>
+        <div class="pcard-price-label">per month</div>
+        <ul class="pcard-features">
+          <li><span class="pcard-check">✓</span> Bi-weekly lawn maintenance</li>
+          <li><span class="pcard-check">✓</span> Seasonal fertilization (2x/year)</li>
+          <li><span class="pcard-check">✓</span> Debris & leaf removal</li>
+          <li><span class="pcard-check">✓</span> Edge & trim service</li>
+          <li><span class="pcard-check">✓</span> Dedicated crew member</li>
+          <li style="opacity:0.3"><span>✗</span> Irrigation management</li>
+          <li style="opacity:0.3"><span>✗</span> Priority scheduling</li>
         </ul>
-    </section>
+        <a href="#contact" class="pcard-btn">Get Started</a>
+      </div>
+      <div class="pcard featured reveal reveal-delay-1">
+        <div class="pcard-tag">Most Popular</div>
+        <div class="pcard-name">Garden Premium</div>
+        <div class="pcard-price">$599</div>
+        <div class="pcard-price-label">per month</div>
+        <ul class="pcard-features">
+          <li><span class="pcard-check">✓</span> Weekly lawn maintenance</li>
+          <li><span class="pcard-check">✓</span> Full fertilization program (4x/year)</li>
+          <li><span class="pcard-check">✓</span> Pruning & shaping service</li>
+          <li><span class="pcard-check">✓</span> Irrigation system management</li>
+          <li><span class="pcard-check">✓</span> Seasonal color plantings</li>
+          <li><span class="pcard-check">✓</span> Priority scheduling</li>
+          <li><span class="pcard-check">✓</span> Annual design consultation</li>
+        </ul>
+        <a href="#contact" class="pcard-btn">Get Started</a>
+      </div>
+      <div class="pcard reveal reveal-delay-2">
+        <div class="pcard-tag">Full Service</div>
+        <div class="pcard-name">Estate Complete</div>
+        <div class="pcard-price">$1,199</div>
+        <div class="pcard-price-label">per month</div>
+        <ul class="pcard-features">
+          <li><span class="pcard-check">✓</span> Everything in Premium</li>
+          <li><span class="pcard-check">✓</span> Dedicated landscape manager</li>
+          <li><span class="pcard-check">✓</span> Smart irrigation optimization</li>
+          <li><span class="pcard-check">✓</span> Pest & disease management</li>
+          <li><span class="pcard-check">✓</span> Landscape lighting maintenance</li>
+          <li><span class="pcard-check">✓</span> 24/7 emergency response</li>
+          <li><span class="pcard-check">✓</span> Unlimited design consultations</li>
+        </ul>
+        <a href="#contact" class="pcard-btn">Get Started</a>
+      </div>
+    </div>
+    <p style="text-align:center; color:rgba(255,255,255,0.25); font-size:0.8rem; margin-top:32px; letter-spacing:0.05em;">
+      One-time installation projects quoted individually. All plans include a free initial consultation.
+    </p>
+  </div>
+</section>
 
-    <section id="services">
-        <h2>What We Do / Our Services</h2>
-        <p style="color: var(--text-muted); margin-bottom: 1rem;">From intimate garden redesigns to sweeping estate transformations — we bring the full spectrum of landscape artistry to your property.</p>
-        
-        <div class="grid">
-            <div class="card">
-                <div class="card-num">01 🌿</div>
-                <h3>Landscape Design</h3>
-                <p>Comprehensive design plans drawn by our licensed landscape architects — from planting schedules to 3D visualizations of your future garden.</p>
-            </div>
-            <div class="card">
-                <div class="card-num">02 🪨</div>
-                <h3>Hardscape & Stonework</h3>
-                <p>Patios, pathways, retaining walls, pergolas, and outdoor kitchens — crafted with natural stone, premium pavers, and hand-selected materials.</p>
-            </div>
-            <div class="card">
-                <div class="card-num">03 💧</div>
-                <h3>Water Features</h3>
-                <p>Custom ponds, waterfalls, reflecting pools, and fountain systems designed to bring the calming presence of water to your property.</p>
-            </div>
-            <div class="card">
-                <div class="card-num">04 💡</div>
-                <h3>Landscape Lighting</h3>
-                <p>Architectural and accent lighting systems that extend the beauty of your landscape into the evening hours, safely and dramatically.</p>
-            </div>
-            <div class="card">
-                <div class="card-num">05 🌱</div>
-                <h3>Ongoing Maintenance</h3>
-                <p>Seasonal care plans, lawn programs, pruning, fertilization, and irrigation management — keeping your landscape pristine year-round.</p>
-            </div>
-            <div class="card">
-                <div class="card-num">06 🌀</div>
-                <h3>Smart Irrigation</h3>
-                <p>Precision irrigation systems with smart controllers, rain sensors, and zone management — saving water while keeping everything perfectly hydrated.</p>
-            </div>
+<!-- CONTACT / CTA -->
+<section class="cta-section" id="contact">
+  <div class="cta-text">
+    <div class="section-tag reveal">
+      <div class="section-tag-line"></div>
+      <span>Get In Touch</span>
+    </div>
+    <h2 class="section-h2 reveal reveal-delay-1">
+      Let's build something<br><em>extraordinary.</em>
+    </h2>
+    <p class="reveal reveal-delay-2">
+      Every great landscape starts with a single conversation. Tell us about your vision and we'll create a complimentary design proposal tailored to your property.
+    </p>
+    <div class="reveal reveal-delay-3" style="display:flex; flex-direction:column; gap:16px;">
+      <div style="display:flex;align-items:center;gap:12px;">
+        <div style="width:40px;height:40px;border-radius:50%;background:var(--cream);display:flex;align-items:center;justify-content:center;font-size:1rem;">📞</div>
+        <div>
+          <div style="font-size:0.72rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--sage);">Call Us</div>
+          <div style="font-weight:500;color:var(--forest);">(206) 555-0182</div>
         </div>
-    </section>
-
-    <section id="process">
-        <h2>How It Works / Our Process</h2>
-        <p style="color: var(--text-muted); margin-bottom: 1rem;">A seamless journey from first conversation to finished masterpiece — every step designed around your vision and comfort.</p>
-        
-        <div class="grid">
-            <div class="card">
-                <div class="card-num">01</div>
-                <h3>Free Discovery Call</h3>
-                <p>We start with a 30-minute conversation to understand your vision, budget, and timeline. No pressure, no commitment — just exploration.</p>
-            </div>
-            <div class="card">
-                <div class="card-num">02</div>
-                <h3>On-Site Assessment</h3>
-                <p>Our lead designer visits your property to assess soil, drainage, sun exposure, and existing plants — the foundation of any great design.</p>
-            </div>
-            <div class="card">
-                <div class="card-num">03</div>
-                <h3>Design Presentation</h3>
-                <p>We present a full design package including concept renderings, plant lists, material samples, and itemized pricing — bringing your vision to life on paper.</p>
-            </div>
-            <div class="card">
-                <div class="card-num">04</div>
-                <h3>Build & Installation</h3>
-                <p>Our expert crews execute the design with precision and care, communicating with you throughout and minimizing disruption to your daily life.</p>
-            </div>
-            <div class="card">
-                <div class="card-num">05</div>
-                <h3>Ongoing Care Plan</h3>
-                <p>We don't disappear after installation — choose from our maintenance plans to keep your landscape thriving through every season, year after year.</p>
-            </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;">
+        <div style="width:40px;height:40px;border-radius:50%;background:var(--cream);display:flex;align-items:center;justify-content:center;font-size:1rem;">✉️</div>
+        <div>
+          <div style="font-size:0.72rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--sage);">Email Us</div>
+          <div style="font-weight:500;color:var(--forest);">hello@verdantandco.com</div>
         </div>
-    </section>
-
-    <section id="portfolio">
-        <h2>Our Portfolio / Recent Work</h2>
-        <div class="portfolio-list">
-            <div class="p-item">
-                <h4>The Morrison Estate</h4>
-                <span>Mercer Island — Full Landscape Redesign</span>
-            </div>
-            <div class="p-item">
-                <h4>Eastside Garden</h4>
-                <span>Bellevue — Native Plant Design</span>
-            </div>
-            <div class="p-item">
-                <h4>Cascade Terrace</h4>
-                <span>Kirkland — Patio & Stonework</span>
-            </div>
-            <div class="p-item">
-                <h4>Waterfall Retreat</h4>
-                <span>Redmond — Water Feature</span>
-            </div>
-            <div class="p-item">
-                <h4>Urban Sanctuary</h4>
-                <span>Capitol Hill, Seattle — Rooftop Garden</span>
-            </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;">
+        <div style="width:40px;height:40px;border-radius:50%;background:var(--cream);display:flex;align-items:center;justify-content:center;font-size:1rem;">📍</div>
+        <div>
+          <div style="font-size:0.72rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--sage);">Studio</div>
+          <div style="font-weight:500;color:var(--forest);">2840 Eastlake Ave E, Seattle WA 98102</div>
         </div>
-    </section>
+      </div>
+    </div>
+  </div>
 
-    <section id="reviews">
-        <h2>Client Love / What Our Clients Say</h2>
-        <p style="margin-bottom: 2rem;"><strong>★★★★★ 4.9 Based on 214 reviews across Google, Houzz & Yelp</strong></p>
-        
-        <div class="review-container">
-            <div class="card">
-                <div class="stars">★★★★★</div>
-                <p style="color: var(--text-light); font-style: italic; margin-bottom: 1rem;">"Verdant & Co. completely transformed our backyard. What was once a muddy, unusable space is now the most beautiful room in our home — and we spend every evening out there. The attention to detail was extraordinary."</p>
-                <p style="font-size: 0.85rem; font-weight: 700;">— Sarah & Robert Kincaid</p>
-                <span style="font-size: 0.8rem; color: var(--text-muted);">Mercer Island, WA</span>
-            </div>
+  <div class="cta-form-wrapper reveal reveal-delay-2">
+    <div style="background:var(--cream);padding:48px;border-radius:4px;">
+      <h3 style="font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:700;color:var(--forest);margin-bottom:8px;">Request a Free Consultation</h3>
+      <p style="font-size:0.85rem;color:#7a8a6a;margin-bottom:28px;line-height:1.6;">We'll reach out within 24 hours to schedule your complimentary on-site visit.</p>
+
+      <div class="cta-form">
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">First Name</label>
+            <input type="text" class="form-input" placeholder="Elena">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Last Name</label>
+            <input type="text" class="form-input" placeholder="Marsh">
+          </div>
         </div>
-    </section>
+        <div class="form-group">
+          <label class="form-label">Email Address</label>
+          <input type="email" class="form-input" placeholder="elena@example.com">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Phone Number</label>
+          <input type="tel" class="form-input" placeholder="(206) 555-0100">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Service Interested In</label>
+          <select class="form-select">
+            <option value="">Select a service...</option>
+            <option>Landscape Design</option>
+            <option>Hardscape & Stonework</option>
+            <option>Water Features</option>
+            <option>Landscape Lighting</option>
+            <option>Ongoing Maintenance</option>
+            <option>Smart Irrigation</option>
+            <option>Full Property Transformation</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Tell Us About Your Project</label>
+          <textarea class="form-textarea" placeholder="Describe your outdoor space and what you'd love to achieve..."></textarea>
+        </div>
+        <button class="form-submit" onclick="handleSubmit(this)">
+          <span id="submit-text">Send My Request</span>
+          <span>→</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
 
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-grid">
+      <div>
+        <span class="footer-logo">Verdant <span>&</span> Co.</span>
+        <p class="footer-tagline">
+          Seattle's most trusted landscape design studio — creating extraordinary outdoor spaces since 2010. Licensed, bonded, and passionately committed to your vision.
+        </p>
+        <div class="footer-socials">
+          <a href="#" class="social-btn">f</a>
+          <a href="#" class="social-btn">in</a>
+          <a href="#" class="social-btn">ig</a>
+          <a href="#" class="social-btn">yt</a>
+        </div>
+      </div>
+      <div>
+        <div class="footer-col-title">Services</div>
+        <ul class="footer-links">
+          <li><a href="#">Landscape Design</a></li>
+          <li><a href="#">Hardscape & Stone</a></li>
+          <li><a href="#">Water Features</a></li>
+          <li><a href="#">Garden Lighting</a></li>
+          <li><a href="#">Maintenance Plans</a></li>
+          <li><a href="#">Smart Irrigation</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-col-title">Company</div>
+        <ul class="footer-links">
+          <li><a href="#">About Us</a></li>
+          <li><a href="#">Our Team</a></li>
+          <li><a href="#">Portfolio</a></li>
+          <li><a href="#">Awards & Press</a></li>
+          <li><a href="#">Careers</a></li>
+          <li><a href="#">Contact</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-col-title">Service Areas</div>
+        <ul class="footer-links">
+          <li><a href="#">Seattle</a></li>
+          <li><a href="#">Bellevue</a></li>
+          <li><a href="#">Kirkland</a></li>
+          <li><a href="#">Mercer Island</a></li>
+          <li><a href="#">Redmond</a></li>
+          <li><a href="#">Sammamish</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="footer-copy">© 2025 Verdant & Co. Landscape Architecture. All rights reserved.</div>
+      <div class="footer-badges">
+        <span class="footer-badge">ASLA Member</span>
+        <span class="footer-badge">Licensed & Bonded</span>
+        <span class="footer-badge">5-Year Guarantee</span>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Custom cursor
+  const cursor = document.getElementById('cursor');
+  const ring = document.getElementById('cursorRing');
+  let mouseX = 0, mouseY = 0;
+  let ringX = 0, ringY = 0;
+
+  document.addEventListener('mousemove', e => {
+    mouseX = e.clientX; mouseY = e.clientY;
+    cursor.style.left = mouseX + 'px';
+    cursor.style.top = mouseY + 'px';
+  });
+
+  function animateRing() {
+    ringX += (mouseX - ringX) * 0.12;
+    ringY += (mouseY - ringY) * 0.12;
+    ring.style.left = ringX + 'px';
+    ring.style.top = ringY + 'px';
+    requestAnimationFrame(animateRing);
+  }
+  animateRing();
+
+  document.querySelectorAll('a, button, .service-card, .pcard, .tcard, .gallery-item').forEach(el => {
+    el.addEventListener('mouseenter', () => { cursor.classList.add('active'); ring.classList.add('active'); });
+    el.addEventListener('mouseleave', () => { cursor.classList.remove('active'); ring.classList.remove('active'); });
+  });
+
+  // Navbar scroll
+  const navbar = document.getElementById('navbar');
+  window.addEventListener('scroll', () => {
+    navbar.classList.toggle('scrolled', window.scrollY > 60);
+  });
+
+  // Leaf particles
+  const particlesContainer = document.getElementById('particles');
+  for (let i = 0; i < 18; i++) {
+    const leaf = document.createElement('div');
+    leaf.className = 'leaf-particle';
+    leaf.style.cssText = `
+      left: ${Math.random() * 100}%;
+      width: ${4 + Math.random() * 6}px;
+      height: ${8 + Math.random() * 8}px;
+      animation-duration: ${12 + Math.random() * 16}s;
+      animation-delay: ${Math.random() * 20}s;
+      opacity: ${0.1 + Math.random() * 0.2};
+      border-radius: ${Math.random() > 0.5 ? '50% 0' : '0 50%'};
+    `;
+    particlesContainer.appendChild(leaf);
+  }
+
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.12 });
+  reveals.forEach(el => revealObserver.observe(el));
+
+  // Counter animation for hero stats
+  function animateCounter(el, target, suffix = '') {
+    let current = 0;
+    const increment = target / 60;
+    const timer = setInterval(() => {
+      current += increment;
+      if (current >= target) { current = target; clearInterval(timer); }
+      el.innerHTML = Math.floor(current) + '<span>' + suffix + '</span>';
+    }, 25);
+  }
+
+  setTimeout(() => {
+    const statNums = document.querySelectorAll('.stat-num');
+    animateCounter(statNums[0], 14, '+');
+    animateCounter(statNums[1], 840, '+');
+    animateCounter(statNums[2], 99, '%');
+  }, 2800);
+
+  // Form submit handler
+  function handleSubmit(btn) {
+    const text = document.getElementById('submit-text');
+    text.textContent = 'Sending...';
+    btn.style.opacity = '0.7';
+    setTimeout(() => {
+      text.textContent = '✓ Request Sent!';
+      btn.style.background = 'var(--sage)';
+      btn.style.opacity = '1';
+      setTimeout(() => {
+        text.textContent = 'Send My Request';
+        btn.style.background = '';
+      }, 3000);
+    }, 1400);
+  }
+
+  // Smooth active nav links
+  const sections = document.querySelectorAll('section[id], div[id]');
+  const navLinks = document.querySelectorAll('.nav-links a');
+  window.addEventListener('scroll', () => {
+    let current = '';
+    sections.forEach(s => {
+      if (window.scrollY >= s.offsetTop - 120) current = s.getAttribute('id');
+    });
+    navLinks.forEach(a => {
+      a.style.opacity = a.getAttribute('href') === '#' + current ? '1' : '';
+    });
+  });
+</script>
 </body>
 </html>
 
+            
