@@ -1,250 +1,392 @@
-Verdant & Co.
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verdant & Co. | Seattle's Premier Landscape Studio</title>
+    <style>
+        :root {
+            --bg-dark: #0d110e;
+            --bg-card: #151b17;
+            --primary: #4b6e56;
+            --primary-light: #628b70;
+            --text-light: #f3f5f3;
+            --text-muted: #9aaf9e;
+            --gold: #d4af37;
+        }
 
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            line-height: 1.6;
+        }
 
-Verdant & Co.
+        header {
+            background-color: rgba(13, 17, 14, 0.95);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            padding: 1.2rem 2rem;
+        }
 
+        .header-container {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
 
+        .logo {
+            font-size: 1.4rem;
+            font-weight: 700;
+            letter-spacing: 0.1rem;
+            text-transform: uppercase;
+        }
 
+        .consult-btn {
+            background-color: var(--primary);
+            color: white;
+            text-decoration: none;
+            padding: 0.6rem 1.2rem;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: background 0.2s;
+        }
 
-SEATTLE'S PREMIER LANDSCAPE STUDIO
-Where Nature Becomes
-Art.
-We design, build, and maintain extraordinary outdoor spaces — transforming ordinary yards into living, breathing masterpieces that endure for generations.
-START YOUR PROJECT
-→
-View Our Work
-→
+        .consult-btn:hover {
+            background-color: var(--primary-light);
+        }
 
-SCROLL
+        .ticker {
+            background-color: var(--primary);
+            padding: 0.5rem 0;
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            overflow: hidden;
+            white-space: nowrap;
+            text-align: center;
+        }
 
-LANDSCAPE DESIGN
+        section {
+            padding: 4rem 2rem;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
 
-HARDSCAPE INSTALLATION
+        .hero {
+            padding: 6rem 2rem;
+            text-align: center;
+            max-width: 800px;
+        }
 
-WATER FEATURES
+        .hero-tag {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            color: var(--primary-light);
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
 
-OUTDOOR LIVING SPACES
+        h1 {
+            font-size: 3rem;
+            font-weight: 300;
+            line-height: 1.2;
+            margin-bottom: 1.5rem;
+        }
 
-SEASONAL PLANTING
+        h1 span {
+            font-weight: 700;
+        }
 
-IRRIGATION SYSTEMS
+        .hero p {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            margin-bottom: 2.5rem;
+        }
 
-LAWN CARE
+        .cta-group {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+        }
 
-GARDEN LIGHTING
+        .btn {
+            padding: 0.8rem 2rem;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.2s;
+        }
 
-LANDSCAPE DESIGN
+        .btn-main {
+            background-color: var(--primary);
+            color: white;
+        }
 
-HARDSCAPE INSTALLATION
+        .btn-main:hover {
+            background-color: var(--primary-light);
+        }
 
-WATER FEATURES
+        .btn-sub {
+            border: 1px solid var(--text-muted);
+            color: var(--text-light);
+        }
 
-OUTDOOR LIVING SPACES
+        .btn-sub:hover {
+            background-color: rgba(255,255,255,0.05);
+        }
 
-SEASONAL PLANTING
+        h2 {
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding-bottom: 0.5rem;
+        }
 
-IRRIGATION SYSTEMS
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
 
-LAWN CARE
+        .card {
+            background-color: var(--bg-card);
+            padding: 2rem;
+            border-radius: 6px;
+            border: 1px solid rgba(255,255,255,0.02);
+        }
 
-GARDEN LIGHTING
+        .card-num {
+            font-size: 0.85rem;
+            color: var(--primary-light);
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
 
-V&C
-14
-YEARS OF
-EXCELLENCE
+        .card h3 {
+            margin-bottom: 0.8rem;
+            font-size: 1.3rem;
+        }
 
-ABOUT VERDANT & CO.
-We don't just plant gardens. We craft legacies.
-Founded in 2010 by master horticulturist Elena Marsh, Verdant & Co. has grown into the Pacific Northwest's most celebrated landscape design studio. Our team of 28 specialists brings together artistry, ecology, and precision craftsmanship.
-Every project begins with a conversation — about your vision, your lifestyle, your land. We listen deeply before we draw a single line.
-	•	✦ Award-winning design recognized by the ASLA Pacific Northwest Chapter ✦ Sustainable, native plant-forward approach to every landscape ✦ Full-service from concept through maintenance — one relationship, one team ✦ Licensed, bonded, and insured with a 5-year craftsmanship guarantee
+        .card p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
 
-WHAT WE DO
-Our Services
-From intimate garden redesigns to sweeping estate transformations — we bring the full spectrum of landscape artistry to your property.
-01
-🌿
-Landscape Design
-Comprehensive design plans drawn by our licensed landscape architects — from planting schedules to 3D visualizations of your future garden.
-LEARN MORE
-→
-02
-🪨
-Hardscape & Stonework
-Patios, pathways, retaining walls, pergolas, and outdoor kitchens — crafted with natural stone, premium pavers, and hand-selected materials.
-LEARN MORE
-→
-03
-💧
-Water Features
-Custom ponds, waterfalls, reflecting pools, and fountain systems designed to bring the calming presence of water to your property.
-LEARN MORE
-→
-04
-💡
-Landscape Lighting
-Architectural and accent lighting systems that extend the beauty of your landscape into the evening hours, safely and dramatically.
-LEARN MORE
-→
-05
-🌱
-Ongoing Maintenance
-Seasonal care plans, lawn programs, pruning, fertilization, and irrigation management — keeping your landscape pristine year-round.
-LEARN MORE
-→
-06
-🔄
-Smart Irrigation
-Precision irrigation systems with smart controllers, rain sensors, and zone management — saving water while keeping everything perfectly hydrated.
-LEARN MORE
-→
+        .highlights {
+            list-style: none;
+            margin-top: 1.5rem;
+        }
 
-HOW IT WORKS
-Our Process
-A seamless journey from first conversation to finished masterpiece — every step designed around your vision and comfort.
-01
-Free Discovery Call
-We start with a 30-minute conversation to understand your vision, budget, and timeline. No pressure, no commitment — just exploration.
-02
-On-Site Assessment
-Our lead designer visits your property to assess soil, drainage, sun exposure, and existing plants — the foundation of any great design.
-03
-Design Presentation
-We present a full design package including concept renderings, plant lists, material samples, and itemized pricing — bringing your vision to life on paper.
-04
-Build & Installation
-Our expert crews execute the design with precision and care, communicating with you throughout and minimizing disruption to your daily life.
-05
-Ongoing Care Plan
-We don't disappear after installation — choose from our maintenance plans to keep your landscape thriving through every season, year after year.
+        .highlights li {
+            margin-bottom: 0.8rem;
+            position: relative;
+            padding-left: 1.5rem;
+        }
 
-OUR PORTFOLIO
-Recent Work
+        .highlights li::before {
+            content: "✦";
+            position: absolute;
+            left: 0;
+            color: var(--primary-light);
+        }
 
-The Morrison Estate
-Mercer Island — Full Landscape Redesign
+        .portfolio-list, .review-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.5rem;
+        }
 
-Eastside Garden
-Bellevue — Native Plant Design
+        .p-item {
+            background: linear-gradient(135deg, #1a231e, #111613);
+            padding: 2rem;
+            border-radius: 6px;
+            text-align: center;
+        }
 
-Cascade Terrace
-Kirkland — Patio & Stonework
+        .p-item h4 {
+            font-size: 1.1rem;
+            margin-bottom: 0.3rem;
+        }
 
-Waterfall Retreat
-Redmond — Water Feature
+        .p-item span {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
 
-Urban Sanctuary
-Capitol Hill, Seattle — Rooftop Garden
+        .stars {
+            color: var(--gold);
+            margin-bottom: 0.5rem;
+        }
 
-CLIENT LOVE
-What Our Clients Say
-★★★★★
-4.9
-Based on 214 reviews across Google, Houzz & Yelp
+        @media (max-width: 600px) {
+            h1 { font-size: 2.2rem; }
+            .cta-group { flex-direction: column; }
+            section { padding: 3rem 1.5rem; }
+        }
+    </style>
+</head>
+<body>
 
-BOOK A FREE CONSULT
-→
-Verdant & Co. completely transformed our backyard. What was once a muddy, unusable space is now the most beautiful room in our home — and we spend every evening out there. The attention to detail was extraordinary.
-SR
-Sarah & Robert Kincaid
-Mercer Island, WA
-★★★★★
-I've worked with many landscapers over the years. Verdant is different — they think like artists and work like craftspeople. The water feature they designed for us won a neighborhood beautification award.
-MH
-Marcus Holloway
-Bellevue, WA
-★★★★★
-From the first consultation through the final walkthrough, the experience was seamless. Their team was professional, on-time, and genuinely cared about getting every detail perfect. Couldn't be happier.
-JP
-Jennifer Park
-Kirkland, WA
-★★★★★
+    <header>
+        <div class="header-container">
+            <div class="logo">Verdant & Co.</div>
+            <a href="#" class="consult-btn">BOOK A FREE CONSULT</a>
+        </div>
+    </header>
 
-INVESTMENT
-Transparent Pricing
-Clear, honest pricing with no hidden fees. Every project includes a detailed proposal before any work begins.
-STARTER
-Essential Care
-$299
-per month
-	•	✓ Bi-weekly lawn maintenance ✓ Seasonal fertilization (2x/year) ✓ Debris & leaf removal ✓ Edge & trim service ✓ Dedicated crew member ✗ Irrigation management ✗ Priority scheduling
-GET STARTED
-MOST POPULAR
-Garden Premium
-$599
-per month
-	•	✓ Weekly lawn maintenance ✓ Full fertilization program (4x/year) ✓ Pruning & shaping service ✓ Irrigation system management ✓ Seasonal color plantings ✓ Priority scheduling ✓ Annual design consultation
-GET STARTED
-FULL SERVICE
-Estate Complete
-$1,199
-per month
-	•	✓ Everything in Premium ✓ Dedicated landscape manager ✓ Smart irrigation optimization ✓ Pest & disease management ✓ Landscape lighting maintenance ✓ 24/7 emergency response ✓ Unlimited design consultations
-GET STARTED
-One-time installation projects quoted individually. All plans include a free initial consultation.
+    <div class="ticker">
+        HARDSCAPE INSTALLATION • WATER FEATURES • OUTDOOR LIVING SPACES • SEASONAL PLANTING • IRRIGATION SYSTEMS • LAWN CARE • GARDEN LIGHTING
+    </div>
 
-GET IN TOUCH
-Let's build something extraordinary.
-Every great landscape starts with a single conversation. Tell us about your vision and we'll create a complimentary design proposal tailored to your property.
-📞
-CALL US
-(206) 555-0182
-✉️
-EMAIL US
-hello@verdantandco.com
-📍
-STUDIO
-2840 Eastlake Ave E, Seattle WA 98102
-Request a Free Consultation
-We'll reach out within 24 hours to schedule your complimentary on-site visit.
-FIRST NAME
+    <section class="hero">
+        <div class="hero-tag">Seattle's Premier Landscape Studio</div>
+        <h1>Where Nature Becomes <span>Art.</span></h1>
+        <p>We design, build, and maintain extraordinary outdoor spaces — transforming ordinary yards into living, breathing masterpieces that endure for generations.</p>
+        <div class="cta-group">
+            <a href="#" class="btn btn-main">START YOUR PROJECT &rarr;</a>
+            <a href="#" class="btn btn-sub">View Our Work</a>
+        </div>
+    </section>
 
-LAST NAME
+    <section id="about">
+        <h2>About Verdant & Co.</h2>
+        <p><strong>14 Years of Excellence.</strong> We don't just plant gardens. We craft legacies. Founded in 2010 by master horticulturist Elena Marsh, Verdant & Co. has grown into the Pacific Northwest's most celebrated landscape design studio. Our team of 28 specialists brings together artistry, ecology, and precision craftsmanship. Every project begins with a conversation — about your vision, your lifestyle, your land. We listen deeply before we draw a single line.</p>
+        
+        <ul class="highlights">
+            <li>Award-winning design recognized by the ASLA Pacific Northwest Chapter</li>
+            <li>Sustainable, native plant-forward approach to every landscape</li>
+            <li>Full-service from concept through maintenance — one relationship, one team</li>
+            <li>Licensed, bonded, and insured with a 5-year craftsmanship guarantee</li>
+        </ul>
+    </section>
 
-EMAIL ADDRESS
+    <section id="services">
+        <h2>What We Do / Our Services</h2>
+        <p style="color: var(--text-muted); margin-bottom: 1rem;">From intimate garden redesigns to sweeping estate transformations — we bring the full spectrum of landscape artistry to your property.</p>
+        
+        <div class="grid">
+            <div class="card">
+                <div class="card-num">01 🌿</div>
+                <h3>Landscape Design</h3>
+                <p>Comprehensive design plans drawn by our licensed landscape architects — from planting schedules to 3D visualizations of your future garden.</p>
+            </div>
+            <div class="card">
+                <div class="card-num">02 🪨</div>
+                <h3>Hardscape & Stonework</h3>
+                <p>Patios, pathways, retaining walls, pergolas, and outdoor kitchens — crafted with natural stone, premium pavers, and hand-selected materials.</p>
+            </div>
+            <div class="card">
+                <div class="card-num">03 💧</div>
+                <h3>Water Features</h3>
+                <p>Custom ponds, waterfalls, reflecting pools, and fountain systems designed to bring the calming presence of water to your property.</p>
+            </div>
+            <div class="card">
+                <div class="card-num">04 💡</div>
+                <h3>Landscape Lighting</h3>
+                <p>Architectural and accent lighting systems that extend the beauty of your landscape into the evening hours, safely and dramatically.</p>
+            </div>
+            <div class="card">
+                <div class="card-num">05 🌱</div>
+                <h3>Ongoing Maintenance</h3>
+                <p>Seasonal care plans, lawn programs, pruning, fertilization, and irrigation management — keeping your landscape pristine year-round.</p>
+            </div>
+            <div class="card">
+                <div class="card-num">06 🌀</div>
+                <h3>Smart Irrigation</h3>
+                <p>Precision irrigation systems with smart controllers, rain sensors, and zone management — saving water while keeping everything perfectly hydrated.</p>
+            </div>
+        </div>
+    </section>
 
-PHONE NUMBER
+    <section id="process">
+        <h2>How It Works / Our Process</h2>
+        <p style="color: var(--text-muted); margin-bottom: 1rem;">A seamless journey from first conversation to finished masterpiece — every step designed around your vision and comfort.</p>
+        
+        <div class="grid">
+            <div class="card">
+                <div class="card-num">01</div>
+                <h3>Free Discovery Call</h3>
+                <p>We start with a 30-minute conversation to understand your vision, budget, and timeline. No pressure, no commitment — just exploration.</p>
+            </div>
+            <div class="card">
+                <div class="card-num">02</div>
+                <h3>On-Site Assessment</h3>
+                <p>Our lead designer visits your property to assess soil, drainage, sun exposure, and existing plants — the foundation of any great design.</p>
+            </div>
+            <div class="card">
+                <div class="card-num">03</div>
+                <h3>Design Presentation</h3>
+                <p>We present a full design package including concept renderings, plant lists, material samples, and itemized pricing — bringing your vision to life on paper.</p>
+            </div>
+            <div class="card">
+                <div class="card-num">04</div>
+                <h3>Build & Installation</h3>
+                <p>Our expert crews execute the design with precision and care, communicating with you throughout and minimizing disruption to your daily life.</p>
+            </div>
+            <div class="card">
+                <div class="card-num">05</div>
+                <h3>Ongoing Care Plan</h3>
+                <p>We don't disappear after installation — choose from our maintenance plans to keep your landscape thriving through every season, year after year.</p>
+            </div>
+        </div>
+    </section>
 
-SERVICE INTERESTED IN
-            Select a service...
-            Landscape Design
-            Hardscape & Stonework
-            Water Features
-            Landscape Lighting
-            Ongoing Maintenance
-            Smart Irrigation
-            Full Property Transformation
-          
-TELL US ABOUT YOUR PROJECT
-SEND MY REQUEST
-→
-Verdant & Co.
-Seattle's most trusted landscape design studio — creating extraordinary outdoor spaces since 2010. Licensed, bonded, and passionately committed to your vision.
-f in ig yt
-SERVICES
-	•	Landscape Design
-	•	Hardscape & Stone
-	•	Water Features
-	•	Garden Lighting
-	•	Maintenance Plans
-	•	Smart Irrigation
-COMPANY
-	•	About Us
-	•	Our Team
-	•	Portfolio
-	•	Awards & Press
-	•	Careers
-	•	Contact
-SERVICE AREAS
-	•	Seattle
-	•	Bellevue
-	•	Kirkland
-	•	Mercer Island
-	•	Redmond
-	•	Sammamish
-© 2025 Verdant & Co. Landscape Architecture. All rights reserved.
-ASLA MEMBER
-LICENSED & BONDED
-5-YEAR GUARANTEE
+    <section id="portfolio">
+        <h2>Our Portfolio / Recent Work</h2>
+        <div class="portfolio-list">
+            <div class="p-item">
+                <h4>The Morrison Estate</h4>
+                <span>Mercer Island — Full Landscape Redesign</span>
+            </div>
+            <div class="p-item">
+                <h4>Eastside Garden</h4>
+                <span>Bellevue — Native Plant Design</span>
+            </div>
+            <div class="p-item">
+                <h4>Cascade Terrace</h4>
+                <span>Kirkland — Patio & Stonework</span>
+            </div>
+            <div class="p-item">
+                <h4>Waterfall Retreat</h4>
+                <span>Redmond — Water Feature</span>
+            </div>
+            <div class="p-item">
+                <h4>Urban Sanctuary</h4>
+                <span>Capitol Hill, Seattle — Rooftop Garden</span>
+            </div>
+        </div>
+    </section>
+
+    <section id="reviews">
+        <h2>Client Love / What Our Clients Say</h2>
+        <p style="margin-bottom: 2rem;"><strong>★★★★★ 4.9 Based on 214 reviews across Google, Houzz & Yelp</strong></p>
+        
+        <div class="review-container">
+            <div class="card">
+                <div class="stars">★★★★★</div>
+                <p style="color: var(--text-light); font-style: italic; margin-bottom: 1rem;">"Verdant & Co. completely transformed our backyard. What was once a muddy, unusable space is now the most beautiful room in our home — and we spend every evening out there. The attention to detail was extraordinary."</p>
+                <p style="font-size: 0.85rem; font-weight: 700;">— Sarah & Robert Kincaid</p>
+                <span style="font-size: 0.8rem; color: var(--text-muted);">Mercer Island, WA</span>
+            </div>
+        </div>
+    </section>
+
+</body>
+</html>
+
